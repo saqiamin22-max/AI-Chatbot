@@ -1,4 +1,11 @@
-streamlit~=1.55.0
-langchain-core~=1.4.0
-dotenv~=0.9.9
-python-dotenv~=1.2.2
+streamlit==1.55.0
+
+langchain==0.2.14
+langchain-core==0.2.38
+langchain-mistralai
+
+python-dotenv==1.2.2
+
+requests
+
+json5
