@@ -8,69 +8,55 @@ import datetime
 
 load_dotenv()
 
-# ─────────────────────────────────────────────
-# PAGE CONFIG
-# ─────────────────────────────────────────────
 st.set_page_config(
-    page_title="Khan AI",
-    page_icon="⚡",
+    page_title="Pathan AI",
+    page_icon="🔥",
     layout="wide",
     initial_sidebar_state="expanded"
 )
 
-# ─────────────────────────────────────────────
-# CUSTOM CSS — Dark Terminal Aesthetic
-# ─────────────────────────────────────────────
+MODEL_NAME = "mistral-large-2512"
+TEMPERATURE = 0.7
+MAX_TOKENS = 1024
+
 st.markdown("""
 <style>
 @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;700&family=Sora:wght@300;400;600;700&display=swap');
 
-/* Base */
 html, body, [class*="css"] {
     font-family: 'Sora', sans-serif;
-    background-color: #0B0D17 !important;
-    color: #E2E8F0 !important;
+    background-color: #0A0F0A !important;
+    color: #E2E8E2 !important;
 }
 
-/* Main area */
 .main .block-container {
-    background-color: #0B0D17;
+    background-color: #0A0F0A;
     padding: 1.5rem 2rem;
     max-width: 900px;
 }
 
-/* Sidebar */
 section[data-testid="stSidebar"] {
-    background: #0F1120 !important;
-    border-right: 1px solid #1E2235;
+    background: #0D140D !important;
+    border-right: 1px solid #1A2E1A;
 }
 section[data-testid="stSidebar"] * {
     font-family: 'JetBrains Mono', monospace !important;
-    color: #A0AEC0 !important;
-}
-section[data-testid="stSidebar"] .stSlider label,
-section[data-testid="stSidebar"] .stSelectbox label {
-    color: #818CF8 !important;
-    font-size: 0.75rem;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
+    color: #8FAF8F !important;
 }
 
-/* Title */
 h1 {
     font-family: 'JetBrains Mono', monospace !important;
-    color: #818CF8 !important;
+    color: #4ADE80 !important;
     font-size: 1.5rem !important;
     letter-spacing: 0.05em;
-    border-bottom: 1px solid #1E2235;
+    border-bottom: 1px solid #1A2E1A;
     padding-bottom: 0.75rem;
     margin-bottom: 1rem !important;
 }
 
-/* Chat messages */
 .stChatMessage {
-    background: #0F1120 !important;
-    border: 1px solid #1E2235 !important;
+    background: #0D140D !important;
+    border: 1px solid #1A2E1A !important;
     border-radius: 8px !important;
     margin-bottom: 0.6rem;
     padding: 0.75rem 1rem !important;
@@ -79,36 +65,32 @@ h1 {
     line-height: 1.6;
 }
 
-/* User message accent */
 .stChatMessage[data-testid="user-message"] {
-    border-left: 3px solid #818CF8 !important;
-    background: #12142A !important;
+    border-left: 3px solid #4ADE80 !important;
+    background: #0F1A0F !important;
 }
 
-/* Assistant message accent */
 .stChatMessage[data-testid="assistant-message"] {
-    border-left: 3px solid #34D399 !important;
+    border-left: 3px solid #F59E0B !important;
 }
 
-/* Chat input */
 .stChatInput textarea {
-    background: #0F1120 !important;
-    border: 1px solid #2D3250 !important;
+    background: #0D140D !important;
+    border: 1px solid #2D4A2D !important;
     border-radius: 8px !important;
-    color: #E2E8F0 !important;
+    color: #E2E8E2 !important;
     font-family: 'JetBrains Mono', monospace !important;
     font-size: 0.9rem !important;
 }
 .stChatInput textarea:focus {
-    border-color: #818CF8 !important;
-    box-shadow: 0 0 0 2px rgba(129,140,248,0.15) !important;
+    border-color: #4ADE80 !important;
+    box-shadow: 0 0 0 2px rgba(74,222,128,0.15) !important;
 }
 
-/* Buttons */
 .stButton button {
-    background: #12142A !important;
-    border: 1px solid #2D3250 !important;
-    color: #818CF8 !important;
+    background: #0F1A0F !important;
+    border: 1px solid #2D4A2D !important;
+    color: #4ADE80 !important;
     font-family: 'JetBrains Mono', monospace !important;
     font-size: 0.75rem !important;
     letter-spacing: 0.05em;
@@ -116,69 +98,40 @@ h1 {
     transition: all 0.2s;
 }
 .stButton button:hover {
-    background: #1a1d3a !important;
-    border-color: #818CF8 !important;
-    color: #A5B4FC !important;
+    background: #1a2e1a !important;
+    border-color: #4ADE80 !important;
+    color: #86EFAC !important;
 }
 
-/* Selectbox */
 .stSelectbox > div > div {
-    background: #0F1120 !important;
-    border: 1px solid #2D3250 !important;
-    color: #E2E8F0 !important;
+    background: #0D140D !important;
+    border: 1px solid #2D4A2D !important;
+    color: #E2E8E2 !important;
     border-radius: 6px !important;
 }
 
-/* Slider */
-.stSlider .st-bo { background: #818CF8 !important; }
-.stSlider .st-bp { background: #2D3250 !important; }
-
-/* Metrics */
-.stMetric {
-    background: #0F1120;
-    border: 1px solid #1E2235;
-    border-radius: 8px;
-    padding: 0.5rem 1rem;
-}
-.stMetric label {
-    color: #818CF8 !important;
-    font-family: 'JetBrains Mono', monospace !important;
-    font-size: 0.7rem !important;
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-}
-.stMetric [data-testid="stMetricValue"] {
-    color: #E2E8F0 !important;
-    font-family: 'JetBrains Mono', monospace !important;
-    font-size: 1.1rem !important;
-}
-
-/* Code blocks */
 code, pre {
-    background: #070810 !important;
-    border: 1px solid #1E2235 !important;
+    background: #060A06 !important;
+    border: 1px solid #1A2E1A !important;
     font-family: 'JetBrains Mono', monospace !important;
     border-radius: 6px;
-    color: #A5B4FC !important;
+    color: #86EFAC !important;
 }
 
-/* Divider */
-hr { border-color: #1E2235 !important; }
+hr { border-color: #1A2E1A !important; }
 
-/* Info/Warning boxes */
 .stAlert {
-    background: #0F1120 !important;
-    border: 1px solid #2D3250 !important;
+    background: #0D140D !important;
+    border: 1px solid #2D4A2D !important;
     border-radius: 8px !important;
-    color: #A0AEC0 !important;
+    color: #8FAF8F !important;
 }
 
-/* Status badge */
 .status-badge {
     display: inline-block;
-    background: rgba(52,211,153,0.1);
-    border: 1px solid rgba(52,211,153,0.3);
-    color: #34D399;
+    background: rgba(74,222,128,0.1);
+    border: 1px solid rgba(74,222,128,0.3);
+    color: #4ADE80;
     font-family: 'JetBrains Mono', monospace;
     font-size: 0.7rem;
     letter-spacing: 0.1em;
@@ -187,44 +140,40 @@ hr { border-color: #1E2235 !important; }
     text-transform: uppercase;
 }
 
-/* Scrollbar */
 ::-webkit-scrollbar { width: 5px; }
-::-webkit-scrollbar-track { background: #0B0D17; }
-::-webkit-scrollbar-thumb { background: #2D3250; border-radius: 3px; }
-::-webkit-scrollbar-thumb:hover { background: #818CF8; }
+::-webkit-scrollbar-track { background: #0A0F0A; }
+::-webkit-scrollbar-thumb { background: #2D4A2D; border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: #4ADE80; }
 </style>
 """, unsafe_allow_html=True)
 
-# ─────────────────────────────────────────────
-# SYSTEM PROMPT PRESETS
-# ─────────────────────────────────────────────
 SYSTEM_PRESETS = {
-    "🎓 AI Tutor": """You are a highly skilled, patient, and intelligent AI tutor named Khan AI, created and developed by Sadiq Amin.
-If anyone asks your name, say: 'I am Khan AI.' If anyone asks who made you, say: 'I was created by Sadiq Amin.'
+    "🎓 AI Tutor": """You are a highly skilled, patient, and intelligent AI tutor named Pathan AI, created and developed by Sadiq Amin.
+If anyone asks your name, say: 'I am Pathan AI.' If anyone asks who made you, say: 'I was created by Sadiq Amin.'
 Explain everything in simple steps with examples.
 Use analogies to make complex concepts easy to understand.
 Always encourage the learner and offer follow-up exercises when relevant.""",
 
-    "💻 Code Expert": """You are an expert software engineer and code reviewer named Khan AI, created and developed by Sadiq Amin.
-If anyone asks your name, say: 'I am Khan AI.' If anyone asks who made you, say: 'I was created by Sadiq Amin.'
+    "💻 Code Expert": """You are an expert software engineer and code reviewer named Pathan AI, created and developed by Sadiq Amin.
+If anyone asks your name, say: 'I am Pathan AI.' If anyone asks who made you, say: 'I was created by Sadiq Amin.'
 Write clean, well-commented, production-grade code.
 Always explain what the code does, why you made certain choices, and suggest improvements.
 Use best practices. Point out potential bugs or edge cases.""",
 
-    "📊 Data Analyst": """You are a senior data scientist and ML engineer named Khan AI, created and developed by Sadiq Amin.
-If anyone asks your name, say: 'I am Khan AI.' If anyone asks who made you, say: 'I was created by Sadiq Amin.'
+    "📊 Data Analyst": """You are a senior data scientist and ML engineer named Pathan AI, created and developed by Sadiq Amin.
+If anyone asks your name, say: 'I am Pathan AI.' If anyone asks who made you, say: 'I was created by Sadiq Amin.'
 Help with data analysis, statistics, machine learning, and visualization.
 Always explain your reasoning. Suggest code in Python using pandas, numpy, sklearn, or matplotlib.
 Interpret results clearly and suggest next steps.""",
 
-    "🧠 Research Assistant": """You are a thorough and accurate research assistant named Khan AI, created and developed by Sadiq Amin.
-If anyone asks your name, say: 'I am Khan AI.' If anyone asks who made you, say: 'I was created by Sadiq Amin.'
+    "🧠 Research Assistant": """You are a thorough and accurate research assistant named Pathan AI, created and developed by Sadiq Amin.
+If anyone asks your name, say: 'I am Pathan AI.' If anyone asks who made you, say: 'I was created by Sadiq Amin.'
 Summarize complex topics clearly. Cite reasoning.
 Offer multiple perspectives when relevant. Be concise but complete.
 Ask clarifying questions if the request is ambiguous.""",
 
-    "✍️ Writing Coach": """You are an expert writing coach and editor named Khan AI, created and developed by Sadiq Amin.
-If anyone asks your name, say: 'I am Khan AI.' If anyone asks who made you, say: 'I was created by Sadiq Amin.'
+    "✍️ Writing Coach": """You are an expert writing coach and editor named Pathan AI, created and developed by Sadiq Amin.
+If anyone asks your name, say: 'I am Pathan AI.' If anyone asks who made you, say: 'I was created by Sadiq Amin.'
 Help improve clarity, tone, structure, and style.
 Offer specific rewrites and explain why they are better.
 Adapt to the user's voice. Be constructive and encouraging.""",
@@ -232,9 +181,6 @@ Adapt to the user's voice. Be constructive and encouraging.""",
     "🔧 Custom": "custom"
 }
 
-# ─────────────────────────────────────────────
-# SESSION STATE INIT
-# ─────────────────────────────────────────────
 def init_state():
     defaults = {
         "messages": [],
@@ -253,27 +199,13 @@ def init_state():
 init_state()
 
 # ─────────────────────────────────────────────
-# SIDEBAR
+# SIDEBAR — sirf persona + actions
 # ─────────────────────────────────────────────
 with st.sidebar:
-    st.markdown("## ⚡ Khan AI")
+    st.markdown("## 🔥 Pathan AI")
     st.markdown('<span class="status-badge">● ONLINE</span>', unsafe_allow_html=True)
     st.markdown("---")
 
-    # Model settings
-    st.markdown("#### MODEL SETTINGS")
-    model_name = st.selectbox(
-        "Model",
-        ["mistral-large-2512", "mistral-medium-2505", "mistral-small-2503"],
-        index=0
-    )
-    temperature = st.slider("Temperature", 0.0, 1.0, 0.7, 0.05,
-                            help="Higher = more creative, Lower = more focused")
-    max_tokens = st.slider("Max Tokens", 256, 4096, 1024, 128)
-
-    st.markdown("---")
-
-    # Persona
     st.markdown("#### AI PERSONA")
     preset = st.selectbox("Preset", list(SYSTEM_PRESETS.keys()),
                           index=list(SYSTEM_PRESETS.keys()).index(st.session_state.preset))
@@ -293,21 +225,6 @@ with st.sidebar:
             st.session_state.messages = []
 
     st.markdown("---")
-
-    # Stats
-    st.markdown("#### SESSION STATS")
-    avg_time = (
-        round(sum(st.session_state.response_times) / len(st.session_state.response_times), 2)
-        if st.session_state.response_times else 0
-    )
-    col1, col2 = st.columns(2)
-    col1.metric("Messages", st.session_state.message_count)
-    col2.metric("Avg Time", f"{avg_time}s")
-    st.caption(f"Session: {st.session_state.session_start}")
-
-    st.markdown("---")
-
-    # Actions
     st.markdown("#### ACTIONS")
 
     if st.button("🗑️ Clear Chat", use_container_width=True):
@@ -317,7 +234,6 @@ with st.sidebar:
         st.session_state.total_tokens = 0
         st.rerun()
 
-    # Export JSON
     if st.button("📥 Export Chat (JSON)", use_container_width=True):
         export_data = []
         for msg in st.session_state.messages:
@@ -334,9 +250,8 @@ with st.sidebar:
             use_container_width=True
         )
 
-    # Export TXT
     if st.button("📄 Export Chat (TXT)", use_container_width=True):
-        txt_lines = [f"Khan AI — Session: {st.session_state.session_start}\n{'='*50}\n"]
+        txt_lines = [f"Pathan AI — Session: {st.session_state.session_start}\n{'='*50}\n"]
         for msg in st.session_state.messages:
             if isinstance(msg, HumanMessage):
                 txt_lines.append(f"[USER]\n{msg.content}\n")
@@ -353,34 +268,29 @@ with st.sidebar:
 # ─────────────────────────────────────────────
 # MAIN AREA
 # ─────────────────────────────────────────────
-st.markdown("# ⚡ Khan AI")
+st.markdown("# 🔥 Pathan AI")
 
-# Active persona banner
 persona_icon = st.session_state.preset.split()[0]
 st.markdown(
-    f'<div style="background:#0F1120;border:1px solid #2D3250;border-radius:8px;'
+    f'<div style="background:#0D140D;border:1px solid #2D4A2D;border-radius:8px;'
     f'padding:0.5rem 1rem;margin-bottom:1rem;font-family:JetBrains Mono,monospace;'
-    f'font-size:0.78rem;color:#818CF8;letter-spacing:0.05em;">'
-    f'{persona_icon} ACTIVE PERSONA: <span style="color:#34D399;">{st.session_state.preset}</span>'
-    f' &nbsp;|&nbsp; 🌡️ TEMP: {temperature} &nbsp;|&nbsp; 📏 MAX TOKENS: {max_tokens}'
+    f'font-size:0.78rem;color:#4ADE80;letter-spacing:0.05em;">'
+    f'{persona_icon} ACTIVE PERSONA: <span style="color:#F59E0B;">{st.session_state.preset}</span>'
     f'</div>',
     unsafe_allow_html=True
 )
 
-# ─── Build full message list (system + history) ───
 def get_full_messages():
     system_content = st.session_state.system_prompt or SYSTEM_PRESETS["🎓 AI Tutor"]
     return [SystemMessage(content=system_content)] + st.session_state.messages
 
-# ─── Display chat history ───
 chat_container = st.container()
 with chat_container:
     if not st.session_state.messages:
         st.markdown(
             '<div style="text-align:center;padding:3rem 0;opacity:0.35;'
-            'font-family:JetBrains Mono,monospace;font-size:0.85rem;color:#818CF8;">'
-            '⚡ Start a conversation...<br><span style="font-size:0.7rem;color:#555;">Model: '
-            + model_name + '</span></div>',
+            'font-family:JetBrains Mono,monospace;font-size:0.85rem;color:#4ADE80;">'
+            '🔥 Start a conversation...</div>',
             unsafe_allow_html=True
         )
 
@@ -391,7 +301,6 @@ with chat_container:
         elif isinstance(msg, AIMessage):
             with st.chat_message("assistant"):
                 st.write(msg.content)
-                # Response metadata
                 if i < len(st.session_state.response_times):
                     rt_index = sum(1 for m in st.session_state.messages[:i]
                                    if isinstance(m, AIMessage))
@@ -406,26 +315,22 @@ with chat_container:
 # ─────────────────────────────────────────────
 # CHAT INPUT
 # ─────────────────────────────────────────────
-user_input = st.chat_input("Message Khan AI...")
+user_input = st.chat_input("Type message here...")
 
 if user_input and user_input.strip():
-    # Show user message
     with st.chat_message("user"):
         st.write(user_input)
 
-    # Save user message
     st.session_state.messages.append(HumanMessage(content=user_input))
     st.session_state.message_count += 1
 
-    # Initialize model with current settings
     model = ChatMistralAI(
-        model=model_name,
+        model=MODEL_NAME,
         streaming=True,
-        temperature=temperature,
-        max_tokens=max_tokens
+        temperature=TEMPERATURE,
+        max_tokens=MAX_TOKENS
     )
 
-    # Stream response
     with st.chat_message("assistant"):
         placeholder = st.empty()
         full_response = ""
@@ -453,6 +358,5 @@ if user_input and user_input.strip():
             placeholder.error(error_msg)
             full_response = error_msg
 
-    # Save AI response
     st.session_state.messages.append(AIMessage(content=full_response))
     st.session_state.message_count += 1
