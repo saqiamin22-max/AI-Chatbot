@@ -1,0 +1,4 @@
+streamlit~=1.55.0
+langchain-core~=1.4.0
+dotenv~=0.9.9
+python-dotenv~=1.2.2
