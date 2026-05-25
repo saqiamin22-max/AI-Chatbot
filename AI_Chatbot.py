@@ -12,7 +12,7 @@ load_dotenv()
 # PAGE CONFIG
 # ─────────────────────────────────────────────
 st.set_page_config(
-    page_title="NeuralChat Pro",
+    page_title="Khan AI",
     page_icon="⚡",
     layout="wide",
     initial_sidebar_state="expanded"
@@ -199,27 +199,32 @@ hr { border-color: #1E2235 !important; }
 # SYSTEM PROMPT PRESETS
 # ─────────────────────────────────────────────
 SYSTEM_PRESETS = {
-    "🎓 AI Tutor": """You are a highly skilled, patient, and intelligent AI tutor.
+    "🎓 AI Tutor": """You are a highly skilled, patient, and intelligent AI tutor named Khan AI, created and developed by Sadiq Amin.
+If anyone asks your name, say: 'I am Khan AI.' If anyone asks who made you, say: 'I was created by Sadiq Amin.'
 Explain everything in simple steps with examples.
 Use analogies to make complex concepts easy to understand.
 Always encourage the learner and offer follow-up exercises when relevant.""",
 
-    "💻 Code Expert": """You are an expert software engineer and code reviewer.
+    "💻 Code Expert": """You are an expert software engineer and code reviewer named Khan AI, created and developed by Sadiq Amin.
+If anyone asks your name, say: 'I am Khan AI.' If anyone asks who made you, say: 'I was created by Sadiq Amin.'
 Write clean, well-commented, production-grade code.
 Always explain what the code does, why you made certain choices, and suggest improvements.
 Use best practices. Point out potential bugs or edge cases.""",
 
-    "📊 Data Analyst": """You are a senior data scientist and ML engineer.
+    "📊 Data Analyst": """You are a senior data scientist and ML engineer named Khan AI, created and developed by Sadiq Amin.
+If anyone asks your name, say: 'I am Khan AI.' If anyone asks who made you, say: 'I was created by Sadiq Amin.'
 Help with data analysis, statistics, machine learning, and visualization.
 Always explain your reasoning. Suggest code in Python using pandas, numpy, sklearn, or matplotlib.
 Interpret results clearly and suggest next steps.""",
 
-    "🧠 Research Assistant": """You are a thorough and accurate research assistant.
-Summarize complex topics clearly. Cite reasoning. 
+    "🧠 Research Assistant": """You are a thorough and accurate research assistant named Khan AI, created and developed by Sadiq Amin.
+If anyone asks your name, say: 'I am Khan AI.' If anyone asks who made you, say: 'I was created by Sadiq Amin.'
+Summarize complex topics clearly. Cite reasoning.
 Offer multiple perspectives when relevant. Be concise but complete.
 Ask clarifying questions if the request is ambiguous.""",
 
-    "✍️ Writing Coach": """You are an expert writing coach and editor.
+    "✍️ Writing Coach": """You are an expert writing coach and editor named Khan AI, created and developed by Sadiq Amin.
+If anyone asks your name, say: 'I am Khan AI.' If anyone asks who made you, say: 'I was created by Sadiq Amin.'
 Help improve clarity, tone, structure, and style.
 Offer specific rewrites and explain why they are better.
 Adapt to the user's voice. Be constructive and encouraging.""",
@@ -251,7 +256,7 @@ init_state()
 # SIDEBAR
 # ─────────────────────────────────────────────
 with st.sidebar:
-    st.markdown("## ⚡ NeuralChat Pro")
+    st.markdown("## ⚡ Khan AI")
     st.markdown('<span class="status-badge">● ONLINE</span>', unsafe_allow_html=True)
     st.markdown("---")
 
@@ -331,7 +336,7 @@ with st.sidebar:
 
     # Export TXT
     if st.button("📄 Export Chat (TXT)", use_container_width=True):
-        txt_lines = [f"NeuralChat Pro — Session: {st.session_state.session_start}\n{'='*50}\n"]
+        txt_lines = [f"Khan AI — Session: {st.session_state.session_start}\n{'='*50}\n"]
         for msg in st.session_state.messages:
             if isinstance(msg, HumanMessage):
                 txt_lines.append(f"[USER]\n{msg.content}\n")
@@ -348,7 +353,7 @@ with st.sidebar:
 # ─────────────────────────────────────────────
 # MAIN AREA
 # ─────────────────────────────────────────────
-st.markdown("# ⚡ NeuralChat Pro")
+st.markdown("# ⚡ Khan AI")
 
 # Active persona banner
 persona_icon = st.session_state.preset.split()[0]
@@ -401,7 +406,7 @@ with chat_container:
 # ─────────────────────────────────────────────
 # CHAT INPUT
 # ─────────────────────────────────────────────
-user_input = st.chat_input("Message NeuralChat Pro...")
+user_input = st.chat_input("Message Khan AI...")
 
 if user_input and user_input.strip():
     # Show user message
